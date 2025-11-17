@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        canvas {
+            display: block;
+            margin: 0px auto;
+        }
+
+        span {
+            /* Por algún motivo Codepen añade un span con texto "AAAAA" al final del HTML */
+            display: none;
+        }
+    </style>
+    <title>Banasura</title>
+</head>
+<body>
+    
+    <canvas id="sketchCanvas"></canvas>
+    <script type="application/processing" data-processing-target="sketchCanvas">
+
+        PImage fondo;
+        PImage tacho;
+        PImage persona;
+        PImage banana;
+        float y, x, a, b, c, startPointX, speed, posXtacho;
+        boolean shoot,opacityDir;
+        int posXtranslate, opacity;
+
+        void setup(){
+        size(800,600);
+        windowTitle("banasura");
+        fondo = loadImage("https://i.ibb.co/PZc9zyRK/fondo.jpg");
+        tacho = loadImage ("https://cdn-icons-png.freepik.com/512/5848/5848613.png");
+        persona = loadImage("https://static.vecteezy.com/system/resources/thumbnails/024/658/871/small/3d-male-character-presenting-to-the-left-with-confidence-free-png.png");
+        banana = loadImage ("https://png.pngtree.com/png-clipart/20250115/original/pngtree-banana-peel-banana-health-closeuphealth-photo-png-image_19866768.png");
+        fondo.resize(0, 600);
+        persona.resize(250, 0);
+        tacho.resize(200, 0);
+        banana.resize(100, 100);
+        startPointX = -400;
+        speed = 15;
+        x = startPointX;
+        a = 0.001; // Esto sería el ángulo del tiro
+        b = 1; // random(-1,1); Esto podría simular el efecto del viento. Cuanto el valor es mayor, más viento en dirección <-. Cuanto el valor es negativo, el viento empuja hacia ->
+        c = 0;
+        shoot = false;
+        posXtacho = random(300, 600);
+        opacity = 125;
+        opacityDir = true;
+        }
+
+        void draw(){
+        imageMode(CORNER);
+        image(fondo,0,0);
+        image(persona,-50,350);
+        image(banana, 95, 370);
+        image(tacho, posXtacho, 400);
+        
+        fill(255, 255, 255, opacity);
+        
+        if(opacity < 50){
+            opacityDir = false;
+        } else if (opacity > 125){
+            opacityDir = true;
+        }
+        if(opacityDir == true){
+            opacity = opacity - 5;
+        } else if (opacityDir == false) {
+            opacity = opacity + 5;
+        }
+        
+        circle(posXtacho + 75, 400, 100);
+
+        // Cuadrados
+        textSize(35);
+        noStroke();
+        fill(103, 214, 99);
+        rect(25, 25, 70, 70);
+        fill(0,0,0);
+        text("1", 50, 70);
+        fill(51, 138, 48);
+        rect(120, 25, 70, 70);
+        fill(0,0,0);
+        text("2", 148, 70);
+        fill(235, 164, 52);
+        rect(215, 25, 70, 70);
+        fill(0,0,0);
+        text("3", 240, 70);
+        fill(207, 71, 66);
+        rect(310, 25, 70, 70);
+        fill(0,0,0);
+        text("4", 338, 70);
+        fill(242, 39, 31);
+        rect(405, 25, 70, 70);
+        fill(0,0,0);
+        text("5", 430, 70);
+        
+        // Centro del eje de abscisas
+        translate(posXtranslate, 200);
+        //circle(0, 0, 10);
+        
+        if(shoot == true){
+            // Función cuadrática
+            y = a*pow(x, 2) + b*x + c;
+            text("Valor de X: " + x, width - 100, 50);
+            text("Valor de Y: " + y, width - 100, 75);
+            x = x + speed;
+            image(banana, x, y);
+        
+            if(y > height - 200){
+            shoot = false;
+            y = 0;
+            posXtacho = random(300, 600);
+            }
+        }
+        
+        }
+
+        void keyPressed(){
+        x = startPointX;
+        
+        if(key == '1'){
+            shoot = true;
+            posXtranslate = 600;
+        } else if(key == '2'){
+            shoot = true;
+            posXtranslate = 500;
+        } else if(key == '3'){
+            shoot = true;
+            posXtranslate = 400;
+        } else if(key == '4'){
+            shoot = true;
+            posXtranslate = 300;
+        } else if(key == '5'){
+            shoot = true;
+            posXtranslate = 200;
+        } else {
+            shoot = false;
+        }
+        }
+
+   </script>
+
+</body>
+</html>
